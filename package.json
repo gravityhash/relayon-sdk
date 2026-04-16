@@ -1,0 +1,57 @@
+{
+  "name": "@relayon/sdk",
+  "version": "1.0.0",
+  "description": "Relayon.io SDK — background jobs and task scheduling. Zero dependencies.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "clean":        "rm -rf dist",
+    "typecheck":    "tsc --noEmit",
+    "build":        "tsc",
+    "check":        "npm run clean && npm run typecheck && npm run build",
+    "test:integration": "npx ts-node test/integration.ts",
+    "pack:dry":     "npm pack --dry-run",
+    "publish:dry":  "npm publish --dry-run --access public",
+    "release":      "npm run check && npm publish --access public",
+    "preflight":    "node scripts/preflight.js",
+    "prepack":      "npm run clean && npm run build",
+    "prepublishOnly": "npm run preflight"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "background-jobs",
+    "task-scheduling",
+    "queue",
+    "cron",
+    "scheduler",
+    "webhooks",
+    "relayon",
+    "sdk"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "author": "Relayon.io",
+  "homepage": "https://github.com/gravityhash/relayon-sdk#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gravityhash/relayon-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gravityhash/relayon-sdk/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
