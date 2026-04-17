@@ -6,6 +6,7 @@
 import {
   RelayonConfig,
   Job,
+  JobAttempt,
   CreateJobOptions,
   ListJobsOptions,
   PaginatedResponse,
@@ -56,6 +57,7 @@ export class Relayon {
     if (options.requires_approval !== undefined) body.requires_approval = options.requires_approval;
     if (options.steps) body.steps = options.steps;
     if (options.lock_timeout_ms !== undefined) body.lock_timeout_ms = options.lock_timeout_ms;
+    if (options.throttle) body.throttle = options.throttle;
 
     const res = await this.request<{ data: Job }>('POST', '/v1/jobs', body);
     return res.data;
@@ -94,6 +96,10 @@ export class Relayon {
   async approveJob(id: string): Promise<Job> {
     const res = await this.request<{ data: Job }>('POST', `/v1/jobs/${id}/approve`);
     return res.data;
+  }
+
+  async getJobAttempts(jobId: string): Promise<{ data: JobAttempt[] }> {
+    return this.request<{ data: JobAttempt[] }>('GET', `/v1/jobs/${jobId}/attempts`);
   }
 
   // --- DLQ ---

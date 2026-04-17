@@ -66,6 +66,15 @@ export interface CreateJobOptions {
   steps?: StepDefinition[];
   /** Lock timeout in ms (default: 300000, range: 1000-3600000) */
   lock_timeout_ms?: number;
+  /** Per-endpoint throttle: cap concurrency and requests-per-second */
+  throttle?: {
+    /** Max concurrent in-flight requests to this endpoint (1-1000) */
+    max_concurrent?: number;
+    /** Max requests per second to this endpoint (0.1-1000) */
+    max_per_second?: number;
+    /** Override the throttle key (default: endpoint hostname) */
+    throttle_key?: string;
+  };
 }
 
 export interface Job {
@@ -90,10 +99,31 @@ export interface Job {
   current_step: number;
   duration_ms: number | null;
   cost_cents: number | null;
+  throttle_config: { max_concurrent: number; max_per_second: number; throttle_key: string } | null;
   created_at: string;
   updated_at: string;
   started_at: string | null;
   completed_at: string | null;
+}
+
+export interface JobAttempt {
+  id: string;
+  job_id: string;
+  attempt_number: number;
+  step_name: string | null;
+  status: 'success' | 'failed' | 'timeout';
+  endpoint: string;
+  request_method: string | null;
+  request_headers: Record<string, string> | null;
+  request_body: string | null;
+  payload_sent: Record<string, unknown> | null;
+  response_status: number | null;
+  response_headers: Record<string, string> | null;
+  response_body: string | null;
+  error_message: string | null;
+  duration_ms: number;
+  worker_id: string;
+  attempted_at: string;
 }
 
 export interface ListJobsOptions {

@@ -9,6 +9,7 @@ export { verifyWebhookSignature } from './webhook';
 export type {
   RelayonConfig,
   Job,
+  JobAttempt,
   JobStatus,
   CreateJobOptions,
   ListJobsOptions,
