@@ -1,6 +1,6 @@
 {
   "name": "@relayon/sdk",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Relayon.io SDK — background jobs and task scheduling. Zero dependencies.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,16 +10,16 @@
     "LICENSE"
   ],
   "scripts": {
-    "clean":        "rm -rf dist",
-    "typecheck":    "tsc --noEmit",
-    "build":        "tsc",
-    "check":        "npm run clean && npm run typecheck && npm run build",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "check": "npm run clean && npm run typecheck && npm run build",
     "test:integration": "npx ts-node test/integration.ts",
-    "pack:dry":     "npm pack --dry-run",
-    "publish:dry":  "npm publish --dry-run --access public",
-    "release":      "npm run check && npm publish --access public",
-    "preflight":    "node scripts/preflight.js",
-    "prepack":      "npm run clean && npm run build",
+    "pack:dry": "npm pack --dry-run",
+    "publish:dry": "npm publish --dry-run --access public",
+    "release": "npm run check && npm publish --access public",
+    "preflight": "node scripts/preflight.js",
+    "prepack": "npm run clean && npm run build",
     "prepublishOnly": "npm run preflight"
   },
   "devDependencies": {
