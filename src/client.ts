@@ -7,8 +7,11 @@ import {
   RelayonConfig,
   Job,
   JobAttempt,
+  Trigger,
   CreateJobOptions,
+  CreateTriggerOptions,
   ListJobsOptions,
+  ListTriggersOptions,
   PaginatedResponse,
   DLQEntry,
   ListDLQOptions,
@@ -100,6 +103,54 @@ export class Relayon {
 
   async getJobAttempts(jobId: string): Promise<{ data: JobAttempt[] }> {
     return this.request<{ data: JobAttempt[] }>('GET', `/v1/jobs/${jobId}/attempts`);
+  }
+
+  // --- Triggers ---
+
+  async createTrigger(options: CreateTriggerOptions): Promise<Trigger> {
+    const body: Record<string, unknown> = { name: options.name, endpoint: options.endpoint };
+    if (options.description) body.description = options.description;
+    if (options.method) body.method = options.method;
+    if (options.headers) body.headers = options.headers;
+    if (options.default_payload) body.default_payload = options.default_payload;
+    if (options.payload_mode) body.payload_mode = options.payload_mode;
+    if (options.steps) body.steps = options.steps;
+    if (options.retry) body.retry = options.retry;
+    if (options.priority !== undefined) body.priority = options.priority;
+    if (options.webhook_secret) body.webhook_secret = options.webhook_secret;
+    if (options.webhook_sign_key) body.webhook_sign_key = options.webhook_sign_key;
+    if (options.throttle) body.throttle = options.throttle;
+
+    const res = await this.request<{ data: Trigger }>('POST', '/v1/triggers', body);
+    return res.data;
+  }
+
+  async listTriggers(options?: ListTriggersOptions): Promise<PaginatedResponse<Trigger>> {
+    const params = new URLSearchParams();
+    if (options?.status) params.set('status', options.status);
+    if (options?.limit !== undefined) params.set('limit', String(options.limit));
+    if (options?.offset !== undefined) params.set('offset', String(options.offset));
+    const qs = params.toString();
+    return this.request<PaginatedResponse<Trigger>>('GET', `/v1/triggers${qs ? `?${qs}` : ''}`);
+  }
+
+  async getTrigger(id: string): Promise<Trigger> {
+    const res = await this.request<{ data: Trigger }>('GET', `/v1/triggers/${id}`);
+    return res.data;
+  }
+
+  async deleteTrigger(id: string): Promise<void> {
+    await this.request('DELETE', `/v1/triggers/${id}`);
+  }
+
+  async pauseTrigger(id: string): Promise<Trigger> {
+    const res = await this.request<{ data: Trigger }>('POST', `/v1/triggers/${id}/pause`);
+    return res.data;
+  }
+
+  async resumeTrigger(id: string): Promise<Trigger> {
+    const res = await this.request<{ data: Trigger }>('POST', `/v1/triggers/${id}/resume`);
+    return res.data;
   }
 
   // --- DLQ ---

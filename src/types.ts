@@ -126,6 +126,78 @@ export interface JobAttempt {
   attempted_at: string;
 }
 
+export interface CreateTriggerOptions {
+  /** Human-readable name */
+  name: string;
+  /** Optional description */
+  description?: string;
+  /** URL to call when the trigger fires */
+  endpoint: string;
+  /** HTTP method (default: POST) */
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  /** Additional headers for outbound requests */
+  headers?: Record<string, string>;
+  /** Default payload merged with inbound body */
+  default_payload?: Record<string, unknown>;
+  /** How to handle inbound body: merge (default), replace, nest, ignore */
+  payload_mode?: 'merge' | 'replace' | 'nest' | 'ignore';
+  /** Multi-step pipeline */
+  steps?: StepDefinition[];
+  /** Per-error-type retry overrides */
+  retry?: RetryConfig;
+  /** Priority 1-4 (default: 3) */
+  priority?: 1 | 2 | 3 | 4;
+  /** Shared secret for verifying inbound signatures */
+  webhook_secret?: string;
+  /** HMAC key for signing outbound requests */
+  webhook_sign_key?: string;
+  /** Per-endpoint throttle */
+  throttle?: {
+    max_concurrent?: number;
+    max_per_second?: number;
+    throttle_key?: string;
+  };
+}
+
+export interface Trigger {
+  id: string;
+  name: string;
+  description: string | null;
+  webhook_id: string;
+  webhook_url: string;
+  endpoint: string;
+  method: string;
+  headers: Record<string, string>;
+  default_payload: Record<string, unknown> | null;
+  payload_mode: 'merge' | 'replace' | 'nest' | 'ignore';
+  steps: StepDefinition[] | null;
+  retry_config: Record<string, unknown>;
+  priority: number;
+  throttle_config: Record<string, unknown> | null;
+  status: 'active' | 'paused';
+  source: 'sdk' | 'agent';
+  total_invocations: number;
+  last_invoked_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TriggerInvocation {
+  id: string;
+  trigger_id: string;
+  job_id: string | null;
+  source_ip: string | null;
+  status: 'accepted' | 'rejected' | 'error';
+  rejection_reason: string | null;
+  created_at: string;
+}
+
+export interface ListTriggersOptions {
+  status?: 'active' | 'paused';
+  limit?: number;
+  offset?: number;
+}
+
 export interface ListJobsOptions {
   status?: JobStatus;
   limit?: number;
