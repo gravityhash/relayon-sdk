@@ -17,7 +17,7 @@ import { Relayon } from '@relayon/sdk'
 
 const relayon = new Relayon({
   apiKey: 'rl_live_a1b2c3d4e5f6...',
-  baseUrl: 'https://jobs.myapp.com', // optional
+  // baseUrl defaults to https://api.relayon.io
 })
 
 // Create a job
@@ -192,9 +192,9 @@ The SDK auto-retries on 429 (rate limited) responses, respecting the `Retry-Afte
 
 ```typescript
 const relayon = new Relayon({
-  apiKey: 'rl_live_...',        // required
-  baseUrl: 'http://localhost:3000', // default
-  timeout: 30000,                   // request timeout in ms
-  maxRetries: 3,                    // max retries on 429
+  apiKey: 'rl_live_...',              // required
+  baseUrl: 'https://api.relayon.io',  // default
+  timeout: 30000,                     // request timeout in ms
+  maxRetries: 3,                      // max retries on 429
 })
 ```

@@ -5,7 +5,7 @@
 export interface RelayonConfig {
   /** API key (format: rl_live_...) */
   apiKey: string;
-  /** Base URL of the Relayon API (default: http://localhost:3000) */
+  /** Base URL of the Relayon API (default: https://api.relayon.io) */
   baseUrl?: string;
   /** Request timeout in ms (default: 30000) */
   timeout?: number;
