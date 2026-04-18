@@ -1,6 +1,6 @@
 {
   "name": "@relayon/sdk",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Relayon.io SDK — background jobs and task scheduling. Zero dependencies.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
