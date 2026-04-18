@@ -8,10 +8,15 @@ import {
   Job,
   JobAttempt,
   Trigger,
+  TriggerInvocation,
+  Schedule,
   CreateJobOptions,
   CreateTriggerOptions,
   ListJobsOptions,
   ListTriggersOptions,
+  ListTriggerInvocationsOptions,
+  ListSchedulesOptions,
+  DeleteScheduleResult,
   PaginatedResponse,
   DLQEntry,
   ListDLQOptions,
@@ -151,6 +156,51 @@ export class Relayon {
   async resumeTrigger(id: string): Promise<Trigger> {
     const res = await this.request<{ data: Trigger }>('POST', `/v1/triggers/${id}/resume`);
     return res.data;
+  }
+
+  async listTriggerInvocations(
+    triggerId: string,
+    options?: ListTriggerInvocationsOptions,
+  ): Promise<PaginatedResponse<TriggerInvocation>> {
+    const params = new URLSearchParams();
+    if (options?.limit !== undefined) params.set('limit', String(options.limit));
+    if (options?.offset !== undefined) params.set('offset', String(options.offset));
+    const qs = params.toString();
+    return this.request<PaginatedResponse<TriggerInvocation>>(
+      'GET',
+      `/v1/triggers/${triggerId}/invocations${qs ? `?${qs}` : ''}`,
+    );
+  }
+
+  // --- Schedules ---
+  //
+  // Schedules are created implicitly when you call createJob({ cron }).
+  // The methods below manage an existing schedule.
+
+  async listSchedules(options?: ListSchedulesOptions): Promise<PaginatedResponse<Schedule>> {
+    const params = new URLSearchParams();
+    if (options?.status) params.set('status', options.status);
+    if (options?.limit !== undefined) params.set('limit', String(options.limit));
+    if (options?.offset !== undefined) params.set('offset', String(options.offset));
+    const qs = params.toString();
+    return this.request<PaginatedResponse<Schedule>>('GET', `/v1/schedules${qs ? `?${qs}` : ''}`);
+  }
+
+  async getSchedule(id: string): Promise<Schedule> {
+    const res = await this.request<{ data: Schedule }>('GET', `/v1/schedules/${id}`);
+    return res.data;
+  }
+
+  async pauseSchedule(id: string): Promise<{ ok: true; id: string }> {
+    return this.request<{ ok: true; id: string }>('POST', `/v1/schedules/${id}/pause`);
+  }
+
+  async resumeSchedule(id: string): Promise<{ ok: true; id: string }> {
+    return this.request<{ ok: true; id: string }>('POST', `/v1/schedules/${id}/resume`);
+  }
+
+  async deleteSchedule(id: string): Promise<DeleteScheduleResult> {
+    return this.request<DeleteScheduleResult>('DELETE', `/v1/schedules/${id}`);
   }
 
   // --- DLQ ---

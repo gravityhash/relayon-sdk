@@ -248,6 +248,49 @@ export interface ReplayResult {
   };
 }
 
+// --- Schedules ---
+
+export interface Schedule {
+  id: string;
+  api_key_id: string;
+  user_id: string;
+  endpoint: string;
+  method: string;
+  cron_expression: string;
+  status: 'active' | 'paused';
+  source: 'sdk' | 'agent';
+  last_run_at: string | null;
+  next_run_at: string | null;
+  created_at: string;
+  stats?: {
+    total_runs: number;
+    done: number;
+    failed: number;
+    running: number;
+    pending: number;
+    cancelled: number;
+  };
+}
+
+export interface ListSchedulesOptions {
+  status?: 'active' | 'paused';
+  limit?: number;
+  offset?: number;
+}
+
+export interface DeleteScheduleResult {
+  ok: true;
+  id: string;
+  cancelled_pending_runs: number;
+}
+
+// --- Trigger invocations (list options) ---
+
+export interface ListTriggerInvocationsOptions {
+  limit?: number;
+  offset?: number;
+}
+
 // --- Health ---
 
 export interface HealthResponse {
